@@ -1,0 +1,286 @@
+﻿raspberry güncelleme
+	sudo apt-get update --fix-missing
+	sudo rpi-update && 
+	sudo apt-get update && 
+	sudo apt-get -y upgrade && 
+	sudo apt-get dist-upgrade && 
+	sudo apt-get clean
+
+su şifresini güncelleme
+	*. sudo -i
+	*. passwd
+
+Sorunları Düzeltme
+	sudo apt-get -f install
+	
+mysql hatalarını giderme
+	sudo rm -rf tc.log && sudo service mysqld start	
+	
+sd card boyutunu arttırma
+	*. sudo apt-get install gparted
+	//kurulacak olan program tercihler kısmından çalıştırılır.
+
+kiosk kurulumu
+	*. sudo apt-get install python-gtk2
+	*. sudo apt-get install python-jswebkit
+	*. sudo apt-get install libwebkitgtk-1.0-0 python-webkit
+
+LCD 3.5 kurulumu
+	https://www.waveshare.com/wiki/3.5inch_RPi_LCD_(A)#Toggle_between_LCD_and_HDMI_display
+	*. tar xvf LCD-show-*.tar.gz
+	*. cd LCD-show/
+	*. chmod +x LCD35-show
+
+	//LCD Ekran İçin
+	*. cd //
+	*. cd /home/pi/Downloads/LCD-show/
+	*. ./LCD35-show
+	
+	//HDMI için
+	*. cd//
+	*. cd /home/pi/Downloads/LCD-show/
+	*. ./LCD-hdmi
+
+	
+LCD (B) 5 inc kurulumu
+	https://www.waveshare.com/wiki/5inch_HDMI_LCD_(B)_(Firmware_Rev_2.1)_User_Manual
+	*. sudo nano /boot/config.txt (rast gele bir yere aşağıdaki satırlar eklenir.)
+	max_usb_current=1
+	hdmi_group=2
+	hdmi_mode=87
+	hdmi_cvt 800 480 60 6 0 0 0
+	hdmi_drive=1
+
+	*. cd//
+	*. cd /home/pi/Downloads/LCD-show/
+	*. ./LCD5-show
+	
+	
+PHP7.0 ve mysqldb kurulumu
+	sudo apt-get install default-mysql-server && sudo apt-get install python-mysqldb && sudo apt-get install phpmyadmin && sudo apt-get clean
+	
+	*. sudo apt-get install mysql-server
+	*. sudo apt-get install python-mysqldb
+	*. sudo apt-get install phpmyadmin
+	
+	sonraki adımlar
+	*. sudo nano /etc/apache2/apache2.conf #dosyayı acınız
+	   Include /etc/phpmyadmin/apache.conf #en alta yapıstırınız
+	*. sudo /etc/init.d/apache2 restart #restart ediniz
+
+
+	*. sudo mysql -p -u admin
+	*. CREATE USER 'admin'@'%' IDENTIFIED BY '11012206';
+	*. GRANT ALL PRIVILEGES ON *.* TO 'admin'@'%' WITH GRANT OPTION;
+	*. GRANT ALL PRIVILEGES ON *.* TO 'admin';
+	*. FLUSH PRIVILEGES;
+
+	
+MSsql Kurulumu
+	*.(çalışan)sudo apt-get install php-odbc
+	*.(yedek)sudo apt-get install python-pymssql
+
+mysql tüm ipadresleri ile paylaşma
+	*.sudo mysql
+	*.GRANT ALL ON *.* TO 'admin'@'%' IDENTIFIED BY '11012206';
+	*.flush privileges;
+	*.exit
+	*.sudo nano /etc/mysql/my.cnf
+	*.bind-address = 192.168.1.15 // kısmı eklenir
+	*.port=8457
+	*.sudo /etc/init.d/mysql restart
+	*.sudo service mysql restart
+	
+Putty Kurulumu
+	*. sudo apt-get install putty
+
+Filezilla Kurulumu
+	*. sudo apt-get install filezilla -y
+
+	
+ModbusTCP Kurulumu
+	https://pypi.org/project/pyModbusTCP/
+	https://pymodbustcp.readthedocs.io/en/latest/examples/read_bit.html
+	
+	*. git clone https://github.com/sourceperl/pyModbusTCP.git
+	*. cd pyModbusTCP
+	*. sudo python setup.py install
+
+	
+Netifaces Kurulumu (ip adresi için)
+	
+
+	*. git clone https://sources.voidlinux.eu/python-netifaces-0.10.7/netifaces-0.10.7.tar.gz (Hsts verilse normail indirin)
+	*. tar xvzf netifaces-0.10.7.tar.gz
+	*. cd netifaces-0.10.7
+	*. python setup.py install
+
+	
+yazıcı tanıtma
+	https://www.howtogeek.com/169679/how-to-add-a-printer-to-your-raspberry-pi-or-other-linux-computer/
+	*. sudo apt-get install cups
+	*. sudo usermod -a -G lpadmin pi
+	
+	chmod +x install
+	
+	//Çslıştırma kodu
+	*. lp -d ARGOX_A-2240_PPLB_203dpi -o raw argox_test.txt
+		
+
+
+
+giriş ekranın resmini değiştirme
+
+	raspberry pi configuration
+	splash screen => Enabled
+
+	/usr/share/plymouth/themes/pix/splash.png
+	dosyasını değiştirmemiz yeterlidir.
+	*.cp yeni_resim_dosya_yolu/splash_2.png /usr/share/plymouth/themes/pix/splash.png
+
+     
+bekleme modunu kapatma İşlemi
+	root ile giriş yapılır
+	sudo apt install xdotool
+	crontab -e
+	gelen ekranda direk enter basılır (en alt satıra gelinir)
+	*/5 * * * * DISPLAY=:0 xdotool click 1
+	30 7 * * * /sbin/shutdown -r now
+	30 8 * * * /sbin/shutdown -r now
+	20 12 * * * /sbin/shutdown -r now
+	30 16 * * * /sbin/shutdown -r now
+	30 22 * * * /sbin/shutdown -r now
+	@reboot vncviewer %f
+	@reboot /opt/teamviewer/tv_bin/script/teamviewer
+	crontab -l
+	
+cron islemi
+	*.crontab -e
+	gelen ekranda direk enter basılır
+	saat dakika * * *
+	Örnek:0 0 * * * sudo python /var/www/html/otopark/cron.py
+	
+	kontrol için ise *.crontab -l
+	
+	
+	
+	
+	
+gipo pi kullanıcısında web ten girişi aktif etme	
+	usermod -a -G gpio www-data
+
+	
+	
+zipli dosyayı çıkarma
+	*.unzip dosya_yolu/dosya_adi.zip
+	
+	
+Statik IP Adresi Tanımlama 
+	*.sudo nano /etc/dhcpcd.conf
+
+	interface eth0
+
+	static ip_address=192.168.1.218
+	static routers=192.168.1.1
+	static domain_name_servers=192.168.1.1
+
+	interface wlan0
+
+	static ip_address=192.168.1.218
+	static routers=192.168.1.1
+	static domain_name_servers=192.168.1.1
+
+DNS Değiştirme	
+	sudo nano /etc/resolv.conf
+	nameserver 8.8.8.8
+	nameserver 8.8.4.4
+	
+	
+Port Değiştirme
+	80 portu değiştirilir
+	nano /etc/apache2/ports.conf
+	nano /etc/apache2/sites-enabled/000-default.conf
+
+Port Değiştirme SSH (22)
+	sudo nano /etc/ssh/sshd_config
+	sudo service ssh restart
+
+
+
+	
+wifi ayarları sıfırlamak
+	//root olarak giriş yapılır
+	*.chmod -R 777 /etc/wpa_supplicant/wpa_supplicant.conf
+	*.sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
+			"""
+			ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+			update_config=1
+			country=TR
+			"""
+			//yukarıda tırnaklar ile gösterilen alanlar dışındaki tüm kısımlar silinir
+	*.reboot
+	
+Network Adını Değiştirmek
+	*. sudo nano /etc/hostname
+	//istenilen network ismi yazılır
+	*. sudo nano /etc/hosts
+	//127.0.0.1 kısmının yanına istenilen network ismi yazılır
+	*.reboot
+	
+	
+
+
+df -h (tüm klasör boyutlarını gösterir)
+
+
+	
+	
+tkinter resim kurulumu
+	sudo apt-get install python-imaging python-imaging-tk
+
+
+
+
+Programı Kaldırma
+	sudo apt-get remove program_adı
+	sudo apt-get purge program_adı
+
+
+VNC KURULUMU
+	sudo apt-get update
+	sudo apt-get install realvnc-vnc-server realvnc-vnc-viewer
+	
+	windows için;
+	https://www.realvnc.com/en/connect/download/viewer/
+
+Ping Atma Kurulumu
+	sudo pip install ping
+
+Keyboard Kurulumu
+	sudo apt-get install matchbox-keyboard
+
+
+Webten veri okuma
+	sudo pip install urllib3
+	
+.dep uzantılı dosyaların kurulması
+	*. sudo apt-get install gdebi
+	*. sudo dpkg -i debfile
+
+putty kurulması
+	*. sudo apt-get install putty -y
+
+
+
+nodejs Kurulumu
+	*. sudo apt-get install software-properties-common
+	*. curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+	*. sudo apt-get install -y nodejs
+	*. sudo apt-get install -y build-essential
+	*. sudo apt-get install -y tcl
+	*. sudo npm install forever -g
+	*. sudo npm install npm@latest -g
+
+	*. npm install tedious
+	*. npm install mssql
+
